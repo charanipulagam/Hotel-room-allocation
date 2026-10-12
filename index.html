@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>GrandStay Hotel</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <span class="logo-mark">GS</span>
+
+            <span>GrandStay</span>
+
+        </div>
+
+
+        <nav>
+
+            <a href="index.html" class="active">
+
+                <span>⌂</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="room.html">
+
+                <span>▦</span>
+
+                Rooms
+
+            </a>
+
+
+            <a href="reservations.html">
+
+                <span>▣</span>
+
+                Reservations
+
+            </a>
+
+
+            <a href="waiting-list.html">
+
+                <span>◷</span>
+
+                Waiting List
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <p>Hotel Allocation</p>
+
+            <small>Data Structures Project</small>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="welcome-small">
+                    Welcome back
+                </p>
+
+                <h1>Hotel Dashboard</h1>
+
+            </div>
+
+
+            <div class="profile">
+
+                <div class="profile-icon">
+                    C
+                </div>
+
+                <div>
+
+                    <strong>Admin</strong>
+
+                    <small>Hotel Manager</small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- HERO SECTION -->
+
+        <section class="hero">
+
+            <div class="hero-text">
+
+                <p class="hero-label">
+                    SMART ROOM ALLOCATION
+                </p>
+
+
+                <h2>
+
+                    Manage your hotel
+
+                    <br>
+
+                    <span>smarter & faster.</span>
+
+                </h2>
+
+
+                <p>
+
+                    Manage rooms, reservations and waiting
+                    customers from one place.
+
+                </p>
+
+
+                <a href="room.html"
+                   class="hero-button">
+
+                    View Rooms →
+
+                </a>
+
+            </div>
+
+
+            <div class="hero-decoration">
+
+                <div class="hotel-icon">
+                    🏨
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- STATISTICS -->
+
+        <section class="stats">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🏨
+                </div>
+
+
+                <div>
+
+                    <p>Total Rooms</p>
+
+                    <h2 id="totalRooms">80</h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon available-icon">
+                    ✓
+                </div>
+
+
+                <div>
+
+                    <p>Available</p>
+
+                    <h2 id="availableRooms">80</h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon occupied-icon">
+                    ●
+                </div>
+
+
+                <div>
+
+                    <p>Occupied</p>
+
+                    <h2 id="occupiedRooms">0</h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon waiting-icon">
+                    ◷
+                </div>
+
+
+                <div>
+
+                    <p>Waiting</p>
+
+                    <h2 id="waitingCustomers">0</h2>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- QUICK ACTIONS -->
+
+        <section class="section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="section-label">
+                        QUICK ACTIONS
+                    </p>
+
+
+                    <h2>
+                        What would you like to do?
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="quick-actions">
+
+
+                <a href="room.html"
+                   class="action-card">
+
+                    <div class="action-icon">
+                        🛏️
+                    </div>
+
+
+                    <h3>
+                        View Rooms
+                    </h3>
+
+
+                    <p>
+                        Check room availability
+                        and details.
+                    </p>
+
+
+                    <span>
+                        Explore →
+                    </span>
+
+                </a>
+
+
+
+                <a href="reservations.html"
+                   class="action-card">
+
+                    <div class="action-icon">
+                        📋
+                    </div>
+
+
+                    <h3>
+                        New Reservation
+                    </h3>
+
+
+                    <p>
+                        Allocate a room for
+                        a new customer.
+                    </p>
+
+
+                    <span>
+                        Book now →
+                    </span>
+
+                </a>
+
+
+
+                <a href="waiting-list.html"
+                   class="action-card">
+
+                    <div class="action-icon">
+                        ⏳
+                    </div>
+
+
+                    <h3>
+                        Waiting List
+                    </h3>
+
+
+                    <p>
+                        View customers waiting
+                        for rooms.
+                    </p>
+
+
+                    <span>
+                        View list →
+                    </span>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- RECENT RESERVATIONS -->
+
+        <section class="section">
+
+
+            <div class="section-heading">
+
+
+                <div>
+
+                    <p class="section-label">
+                        RECENT ACTIVITY
+                    </p>
+
+
+                    <h2>
+                        Recent Reservations
+                    </h2>
+
+                </div>
+
+
+                <a href="reservations.html"
+                   class="view-all">
+
+                    View all →
+
+                </a>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Reservation</th>
+
+                            <th>Customer</th>
+
+                            <th>Room</th>
+
+                            <th>Type</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="recentReservationsBody">
+
+
+                       
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <script src="js/script.js"></script>
+
+
+</body>
+
+</html>

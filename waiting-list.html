@@ -1,0 +1,2162 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Waiting List | GrandStay Hotel</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+
+        /* ==============================
+           WAITING LIST PAGE
+           ============================== */
+
+        .waiting-page {
+            padding: 30px;
+        }
+
+        .waiting-header {
+            margin-bottom: 28px;
+        }
+
+        .waiting-header h2 {
+            margin-bottom: 6px;
+        }
+
+        .waiting-header p {
+            color: #777;
+        }
+
+
+        /* Summary cards */
+
+        .waiting-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .waiting-summary-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eeeeee;
+            transition: 0.25s ease;
+        }
+
+        .waiting-summary-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.09);
+        }
+
+        .waiting-summary-card span {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .waiting-summary-card h2 {
+            margin-top: 10px;
+            font-size: 28px;
+        }
+
+
+        /* Main cards */
+
+        .waiting-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eeeeee;
+        }
+
+        .waiting-card-header {
+            margin-bottom: 24px;
+        }
+
+        .waiting-card-header h2 {
+            margin-bottom: 6px;
+        }
+
+        .waiting-card-header p {
+            color: #888;
+            font-size: 14px;
+        }
+
+
+        /* Form */
+
+        .waiting-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .waiting-form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .waiting-form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .waiting-form-group input,
+        .waiting-form-group select {
+            padding: 13px 15px;
+            border: 1px solid #dddddd;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            background: #fafafa;
+            transition: 0.2s ease;
+        }
+
+        .waiting-form-group input:focus,
+        .waiting-form-group select:focus {
+            border-color: #b89b72;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(184, 155, 114, 0.12);
+        }
+
+        .waiting-add-btn {
+            margin-top: 22px;
+            padding: 13px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            background: #b89b72;
+            color: white;
+            transition: 0.25s ease;
+        }
+
+        .waiting-add-btn:hover {
+            background: #a4865f;
+            transform: translateY(-1px);
+        }
+
+
+        /* Table */
+
+        .waiting-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .waiting-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .waiting-table th {
+            text-align: left;
+            padding: 15px;
+            font-size: 13px;
+            color: #777;
+            border-bottom: 1px solid #eeeeee;
+            white-space: nowrap;
+        }
+
+        .waiting-table td {
+            padding: 17px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .waiting-table tbody tr {
+            transition: 0.2s ease;
+        }
+
+        .waiting-table tbody tr:hover {
+            background: #faf8f5;
+        }
+
+
+        /* Status */
+
+        .waiting-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 11px;
+            border-radius: 20px;
+            background: #fff4df;
+            color: #9a6a16;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+        /* Action buttons */
+
+        .assign-btn,
+        .remove-btn {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.2s ease;
+            margin-right: 5px;
+        }
+
+        .assign-btn {
+            background: #eee8df;
+            color: #765d3c;
+        }
+
+        .assign-btn:hover {
+            background: #dfd4c5;
+        }
+
+        .remove-btn {
+            background: #f8e7e5;
+            color: #a64b43;
+        }
+
+        .remove-btn:hover {
+            background: #f1d2cf;
+        }
+
+
+        /* Empty state */
+
+        .empty-waiting {
+            text-align: center;
+            padding: 45px 20px !important;
+            color: #888;
+        }
+
+        .empty-waiting-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+
+        /* ==============================
+           CUSTOM MODAL
+           ============================== */
+
+        .custom-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(25, 22, 18, 0.48);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .custom-modal-overlay.show {
+            display: flex;
+        }
+
+        .custom-modal {
+            width: 100%;
+            max-width: 410px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+            animation: modalAppear 0.22s ease;
+        }
+
+        @keyframes modalAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+        }
+
+        .modal-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            background: #f5eee5;
+        }
+
+        .modal-icon.success {
+            background: #edf7ef;
+        }
+
+        .modal-icon.warning {
+            background: #fff5df;
+        }
+
+        .modal-icon.delete {
+            background: #fbeceb;
+        }
+
+        .custom-modal h3 {
+            margin-bottom: 9px;
+            font-size: 21px;
+        }
+
+        .custom-modal p {
+            color: #777;
+            line-height: 1.5;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            min-width: 105px;
+            padding: 11px 18px;
+            border-radius: 9px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: 0.2s ease;
+        }
+
+        .modal-cancel {
+            background: #f1f1f1;
+            color: #555;
+        }
+
+        .modal-cancel:hover {
+            background: #e6e6e6;
+        }
+
+        .modal-confirm {
+            background: #b89b72;
+            color: white;
+        }
+
+        .modal-confirm:hover {
+            background: #a4865f;
+        }
+
+        .modal-delete {
+            background: #b96b63;
+            color: white;
+        }
+
+        .modal-delete:hover {
+            background: #a85d56;
+        }
+
+
+        /* Responsive */
+
+        @media (max-width: 700px) {
+
+            .waiting-page {
+                padding: 20px;
+            }
+
+            .waiting-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .waiting-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .waiting-card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <span>🏨</span>
+
+        <h2>GrandStay</h2>
+
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Dashboard
+        </a>
+
+        <a href="room.html">
+            Rooms
+        </a>
+
+        <a href="reservations.html">
+            Reservations
+        </a>
+
+        <a href="waiting-list.html" class="active">
+            Waiting List
+        </a>
+
+    </nav>
+
+</aside>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main-content">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div>
+
+            <h1>Waiting List</h1>
+
+            <p>
+                Manage customers waiting for room availability
+            </p>
+
+        </div>
+
+
+        <div class="profile">
+
+            <strong>Admin</strong>
+
+            <span>
+                Hotel Manager
+            </span>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- PAGE -->
+
+    <section class="waiting-page">
+
+
+        <!-- HEADER -->
+
+        <div class="waiting-header">
+
+            <h2>Customer Waiting List</h2>
+
+            <p>
+                Keep track of customers waiting for their preferred room.
+            </p>
+
+        </div>
+
+
+
+        <!-- SUMMARY -->
+
+        <div class="waiting-summary">
+
+
+            <div class="waiting-summary-card">
+
+                <span>
+                    Customers Waiting
+                </span>
+
+                <h2 id="waitingCount">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="waiting-summary-card">
+
+                <span>
+                    Next Customer
+                </span>
+
+                <h2 id="frontCustomer">
+                    -
+                </h2>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ADD CUSTOMER -->
+
+        <div class="waiting-card">
+
+
+            <div class="waiting-card-header">
+
+                <h2>
+                    Add Customer
+                </h2>
+
+                <p>
+                    Enter customer details to add them to the waiting list.
+                </p>
+
+            </div>
+
+
+            <form id="waitingForm">
+
+
+                <div class="waiting-form-grid">
+
+
+                    <div class="waiting-form-group">
+
+                        <label for="waitingCustomerName">
+                            Customer Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="waitingCustomerName"
+                            placeholder="Enter customer name"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="waiting-form-group">
+
+                        <label for="waitingPhone">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="waitingPhone"
+                            placeholder="Enter phone number"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="waiting-form-group">
+
+                        <label for="waitingRoomType">
+                            Room Type
+                        </label>
+
+                        <select
+                            id="waitingRoomType"
+                            required
+                        >
+
+                            <option value="">
+                                Select room type
+                            </option>
+
+                            <option value="Single">
+                                Single
+                            </option>
+
+                            <option value="Double">
+                                Double
+                            </option>
+
+                            <option value="Deluxe">
+                                Deluxe
+                            </option>
+
+                            <option value="Suite">
+                                Suite
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="waiting-form-group">
+
+                        <label for="waitingGuests">
+                            Number of Guests
+                        </label>
+
+                        <input
+                            type="number"
+                            id="waitingGuests"
+                            min="1"
+                            max="10"
+                            placeholder="Enter number of guests"
+                            required
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="waiting-add-btn"
+                >
+                    Add to Waiting List
+                </button>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- CUSTOMER TABLE -->
+
+        <div class="waiting-card">
+
+
+            <div class="waiting-card-header">
+
+                <h2>
+                    Customers Waiting
+                </h2>
+
+                <p>
+                    Current customer requests
+                </p>
+
+            </div>
+
+
+            <div class="waiting-table-wrapper">
+
+                <table class="waiting-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Position</th>
+
+                            <th>Customer</th>
+
+                            <th>Phone</th>
+
+                            <th>Room Type</th>
+
+                            <th>Guests</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="waitingTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ==============================
+     CUSTOM MODAL
+     ============================== -->
+
+<div
+    class="custom-modal-overlay"
+    id="customModal"
+>
+
+    <div class="custom-modal">
+
+        <div
+            class="modal-icon"
+            id="modalIcon"
+        >
+            ✓
+        </div>
+
+
+        <h3 id="modalTitle">
+            Done
+        </h3>
+
+
+        <p id="modalMessage">
+            Action completed successfully.
+        </p>
+
+
+        <div
+            class="modal-buttons"
+            id="modalButtons"
+        >
+
+            <button
+                class="modal-btn modal-confirm"
+                id="modalOk"
+            >
+                OK
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* =====================================================
+   DATA
+   ===================================================== */
+
+let waitingList =
+    JSON.parse(
+        localStorage.getItem(
+            "grandStayWaitingQueue"
+        )
+    ) || [];
+
+
+
+/* =====================================================
+   CLEAR TEMPORARY WAITING ALLOCATION DATA
+   ===================================================== */
+
+function clearWaitingAllocation() {
+
+    localStorage.removeItem(
+        "waitingCustomerName"
+    );
+
+    localStorage.removeItem(
+        "waitingCustomerPhone"
+    );
+
+    localStorage.removeItem(
+        "waitingCustomerRoomType"
+    );
+
+    localStorage.removeItem(
+        "waitingCustomerGuests"
+    );
+
+    localStorage.removeItem(
+        "waitingCustomerIndex"
+    );
+
+    localStorage.removeItem(
+        "grandStayAllocationNotice"
+    );
+
+}
+
+
+
+/* =====================================================
+   ROOM INFORMATION
+   ===================================================== */
+
+function getRoomType(roomNumber) {
+
+    const room =
+        Number(roomNumber);
+
+
+    if (
+        room >= 101 &&
+        room <= 120
+    ) {
+
+        return "Single";
+
+    }
+
+
+    if (
+        room >= 201 &&
+        room <= 220
+    ) {
+
+        return "Double";
+
+    }
+
+
+    if (
+        room >= 301 &&
+        room <= 320
+    ) {
+
+        return "Deluxe";
+
+    }
+
+
+    if (
+        room >= 401 &&
+        room <= 420
+    ) {
+
+        return "Suite";
+
+    }
+
+
+    return "";
+
+}
+
+
+
+function getRoomFacility(roomNumber) {
+
+    const room =
+        Number(roomNumber);
+
+
+    if (
+        (
+            room >= 101 &&
+            room <= 110
+        ) ||
+        (
+            room >= 201 &&
+            room <= 210
+        )
+    ) {
+
+        return "AC";
+
+    }
+
+
+    if (
+        (
+            room >= 111 &&
+            room <= 120
+        ) ||
+        (
+            room >= 211 &&
+            room <= 220
+        )
+    ) {
+
+        return "Non-AC";
+
+    }
+
+
+    if (
+        (
+            room >= 301 &&
+            room <= 320
+        ) ||
+        (
+            room >= 401 &&
+            room <= 420
+        )
+    ) {
+
+        return "Premium AC";
+
+    }
+
+
+    return "";
+
+}
+
+
+
+/* =====================================================
+   GET CURRENTLY OCCUPIED ROOMS
+   ===================================================== */
+
+function getBookedRooms() {
+
+    const reservations =
+        JSON.parse(
+            localStorage.getItem(
+                "grandStayReservations"
+            )
+        ) || [];
+
+
+    return reservations
+
+        .filter(
+            function(reservation) {
+
+                return (
+                    reservation.status ===
+                    "Confirmed"
+                );
+
+            }
+        )
+
+        .map(
+            function(reservation) {
+
+                return String(
+                    reservation.room
+                );
+
+            }
+        );
+
+}
+
+
+
+/* =====================================================
+   GET ALL AVAILABLE ROOMS
+   ===================================================== */
+
+function getAvailableRooms() {
+
+    const bookedRooms =
+        getBookedRooms();
+
+
+    const rooms = [];
+
+
+    for (
+        let room = 101;
+        room <= 120;
+        room++
+    ) {
+
+        if (
+            !bookedRooms.includes(
+                String(room)
+            )
+        ) {
+
+            rooms.push({
+                number: String(room),
+                type: "Single",
+                facility: getRoomFacility(room)
+            });
+
+        }
+
+    }
+
+
+    for (
+        let room = 201;
+        room <= 220;
+        room++
+    ) {
+
+        if (
+            !bookedRooms.includes(
+                String(room)
+            )
+        ) {
+
+            rooms.push({
+                number: String(room),
+                type: "Double",
+                facility: getRoomFacility(room)
+            });
+
+        }
+
+    }
+
+
+    for (
+        let room = 301;
+        room <= 320;
+        room++
+    ) {
+
+        if (
+            !bookedRooms.includes(
+                String(room)
+            )
+        ) {
+
+            rooms.push({
+                number: String(room),
+                type: "Deluxe",
+                facility: "Premium AC"
+            });
+
+        }
+
+    }
+
+
+    for (
+        let room = 401;
+        room <= 420;
+        room++
+    ) {
+
+        if (
+            !bookedRooms.includes(
+                String(room)
+            )
+        ) {
+
+            rooms.push({
+                number: String(room),
+                type: "Suite",
+                facility: "Premium AC"
+            });
+
+        }
+
+    }
+
+
+    return rooms;
+
+}
+
+
+
+/* =====================================================
+   FIND FIRST ELIGIBLE CUSTOMER
+   ===================================================== */
+
+function getEligibleCustomerIndex() {
+
+    const availableRooms =
+        getAvailableRooms();
+
+
+    if (
+        availableRooms.length === 0 ||
+        waitingList.length === 0
+    ) {
+
+        return -1;
+
+    }
+
+
+    /*
+     * First check whether there is a room
+     * specifically released for a waiting customer.
+     */
+
+    const allocationNotice =
+        JSON.parse(
+            localStorage.getItem(
+                "grandStayAllocationNotice"
+            )
+        );
+
+
+    if (
+        allocationNotice
+    ) {
+
+        const releasedRoom =
+            availableRooms.find(
+                function(room) {
+
+                    return (
+                        String(room.number) ===
+                        String(
+                            allocationNotice.roomNumber
+                        ) &&
+                        room.type ===
+                        allocationNotice.roomType
+                    );
+
+                }
+            );
+
+
+        if (
+            releasedRoom
+        ) {
+
+            const noticeIndex =
+                waitingList.findIndex(
+                    function(customer) {
+
+                        return (
+                            customer.name ===
+                            allocationNotice.customerName &&
+                            customer.roomType ===
+                            allocationNotice.roomType
+                        );
+
+                    }
+                );
+
+
+            if (
+                noticeIndex !== -1
+            ) {
+
+                return noticeIndex;
+
+            }
+
+        }
+
+    }
+
+
+    /*
+     * Otherwise find the first customer
+     * whose requested room type has
+     * an available room.
+     */
+
+    for (
+        let index = 0;
+        index < waitingList.length;
+        index++
+    ) {
+
+        const customer =
+            waitingList[index];
+
+
+        const matchingRoom =
+            availableRooms.find(
+                function(room) {
+
+                    return (
+                        room.type ===
+                        customer.roomType
+                    );
+
+                }
+            );
+
+
+        if (
+            matchingRoom
+        ) {
+
+            return index;
+
+        }
+
+    }
+
+
+    return -1;
+
+}
+
+
+
+/* =====================================================
+   FIND ROOM FOR CUSTOMER
+   ===================================================== */
+
+function getAvailableRoomForCustomer(
+    customer
+) {
+
+    const availableRooms =
+        getAvailableRooms();
+
+
+    /*
+     * First priority:
+     * use the exact room released during
+     * checkout if it matches this customer.
+     */
+
+    const allocationNotice =
+        JSON.parse(
+            localStorage.getItem(
+                "grandStayAllocationNotice"
+            )
+        );
+
+
+    if (
+        allocationNotice &&
+        allocationNotice.customerName ===
+        customer.name &&
+        allocationNotice.roomType ===
+        customer.roomType
+    ) {
+
+        const releasedRoom =
+            availableRooms.find(
+                function(room) {
+
+                    return (
+                        String(room.number) ===
+                        String(
+                            allocationNotice.roomNumber
+                        ) &&
+                        room.type ===
+                        customer.roomType
+                    );
+
+                }
+            );
+
+
+        if (
+            releasedRoom
+        ) {
+
+            return releasedRoom;
+
+        }
+
+    }
+
+
+    /*
+     * Normal allocation:
+     * find the first available room
+     * matching the customer's room type.
+     */
+
+    return availableRooms.find(
+        function(room) {
+
+            return (
+                room.type ===
+                customer.roomType
+            );
+
+        }
+    ) || null;
+
+}
+
+
+
+/* =====================================================
+   CUSTOM MODAL
+   ===================================================== */
+
+const modal =
+    document.getElementById(
+        "customModal"
+    );
+
+const modalIcon =
+    document.getElementById(
+        "modalIcon"
+    );
+
+const modalTitle =
+    document.getElementById(
+        "modalTitle"
+    );
+
+const modalMessage =
+    document.getElementById(
+        "modalMessage"
+    );
+
+const modalButtons =
+    document.getElementById(
+        "modalButtons"
+    );
+
+
+
+function showMessage(
+    title,
+    message,
+    type = "success"
+) {
+
+    modalTitle.textContent =
+        title;
+
+    modalMessage.textContent =
+        message;
+
+
+    modalIcon.className =
+        "modal-icon " +
+        type;
+
+
+    if (
+        type === "delete"
+    ) {
+
+        modalIcon.textContent =
+            "×";
+
+    }
+
+    else if (
+        type === "warning"
+    ) {
+
+        modalIcon.textContent =
+            "!";
+
+    }
+
+    else {
+
+        modalIcon.textContent =
+            "✓";
+
+    }
+
+
+    modalButtons.innerHTML = `
+
+        <button
+            class="modal-btn modal-confirm"
+            id="modalOk"
+        >
+            OK
+        </button>
+
+    `;
+
+
+    document
+        .getElementById("modalOk")
+        .onclick =
+        closeModal;
+
+
+    modal.classList.add(
+        "show"
+    );
+
+}
+
+
+
+function showConfirmation(
+    title,
+    message,
+    confirmFunction,
+    deleteAction = false
+) {
+
+    modalTitle.textContent =
+        title;
+
+    modalMessage.textContent =
+        message;
+
+
+    modalIcon.className =
+        "modal-icon " +
+        (
+            deleteAction
+            ? "delete"
+            : "warning"
+        );
+
+
+    modalIcon.textContent =
+        deleteAction
+        ? "×"
+        : "!";
+
+
+    modalButtons.innerHTML = `
+
+        <button
+            class="modal-btn modal-cancel"
+            id="modalCancel"
+        >
+            Cancel
+        </button>
+
+        <button
+            class="modal-btn ${
+                deleteAction
+                ? "modal-delete"
+                : "modal-confirm"
+            }"
+            id="modalConfirm"
+        >
+            Confirm
+        </button>
+
+    `;
+
+
+    document
+        .getElementById(
+            "modalCancel"
+        )
+        .onclick =
+        closeModal;
+
+
+    document
+        .getElementById(
+            "modalConfirm"
+        )
+        .onclick =
+        function() {
+
+            closeModal();
+
+            confirmFunction();
+
+        };
+
+
+    modal.classList.add(
+        "show"
+    );
+
+}
+
+
+
+function closeModal() {
+
+    modal.classList.remove(
+        "show"
+    );
+
+}
+
+
+
+/* CLOSE MODAL WHEN CLICKING OUTSIDE */
+
+modal.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            event.target ===
+            modal
+        ) {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+
+/* =====================================================
+   DISPLAY WAITING LIST
+   ===================================================== */
+
+function displayWaitingList() {
+
+    const tableBody =
+        document.getElementById(
+            "waitingTableBody"
+        );
+
+
+    const waitingCount =
+        document.getElementById(
+            "waitingCount"
+        );
+
+
+    const frontCustomer =
+        document.getElementById(
+            "frontCustomer"
+        );
+
+
+    waitingCount.textContent =
+        waitingList.length;
+
+
+    if (
+        waitingList.length > 0
+    ) {
+
+        frontCustomer.textContent =
+            waitingList[0].name;
+
+    }
+
+    else {
+
+        frontCustomer.textContent =
+            "-";
+
+    }
+
+
+    tableBody.innerHTML =
+        "";
+
+
+    if (
+        waitingList.length === 0
+    ) {
+
+        tableBody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    class="empty-waiting"
+                >
+
+                    <div class="empty-waiting-icon">
+                        🛎️
+                    </div>
+
+                    <strong>
+                        No customers waiting
+                    </strong>
+
+                    <br>
+
+                    <span>
+                        New customer requests will appear here.
+                    </span>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+
+    const eligibleIndex =
+        getEligibleCustomerIndex();
+
+
+    const allocationNotice =
+        JSON.parse(
+            localStorage.getItem(
+                "grandStayAllocationNotice"
+            )
+        );
+
+
+
+    waitingList.forEach(
+        function(customer, index) {
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            let statusText =
+                "Waiting";
+
+
+            let statusStyle =
+                "";
+
+
+            /*
+             * If this customer is the one
+             * connected to the released room,
+             * show the exact room.
+             */
+
+            if (
+                allocationNotice &&
+                index === eligibleIndex &&
+                allocationNotice.customerName ===
+                customer.name &&
+                allocationNotice.roomType ===
+                customer.roomType
+            ) {
+
+                statusText =
+                    "Room " +
+                    allocationNotice.roomNumber +
+                    " Available";
+
+                statusStyle =
+                    "background:#edf7ef;color:#39734a;";
+
+            }
+
+            else if (
+                index === eligibleIndex
+            ) {
+
+                statusText =
+                    "Room Available";
+
+                statusStyle =
+                    "background:#edf7ef;color:#39734a;";
+
+            }
+
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>
+                        ${index + 1}
+                    </strong>
+                </td>
+
+
+                <td>
+                    <strong>
+                        ${customer.name}
+                    </strong>
+                </td>
+
+
+                <td>
+                    ${customer.phone}
+                </td>
+
+
+                <td>
+                    ${customer.roomType}
+                </td>
+
+
+                <td>
+                    ${customer.guests}
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="waiting-status"
+                        style="${statusStyle}"
+                    >
+                        ${statusText}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="assign-btn"
+                        onclick="assignRoom(${index})"
+                    >
+                        Assign
+                    </button>
+
+
+                    <button
+                        class="remove-btn"
+                        onclick="removeCustomer(${index})"
+                    >
+                        Remove
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tableBody.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   ADD CUSTOMER
+   ===================================================== */
+
+document
+    .getElementById(
+        "waitingForm"
+    )
+    .addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document
+                    .getElementById(
+                        "waitingCustomerName"
+                    )
+                    .value
+                    .trim();
+
+
+            const phone =
+                document
+                    .getElementById(
+                        "waitingPhone"
+                    )
+                    .value
+                    .trim();
+
+
+            const roomType =
+                document
+                    .getElementById(
+                        "waitingRoomType"
+                    )
+                    .value;
+
+
+            const guests =
+                document
+                    .getElementById(
+                        "waitingGuests"
+                    )
+                    .value;
+
+
+            if (
+                !name ||
+                !phone ||
+                !roomType ||
+                !guests
+            ) {
+
+                showMessage(
+                    "Missing Details",
+                    "Please fill in all the customer details.",
+                    "warning"
+                );
+
+                return;
+
+            }
+
+
+
+            const customer = {
+
+                name:
+                    name,
+
+                phone:
+                    phone,
+
+                roomType:
+                    roomType,
+
+                guests:
+                    guests
+
+            };
+
+
+            waitingList.push(
+                customer
+            );
+
+
+            localStorage.setItem(
+                "grandStayWaitingQueue",
+                JSON.stringify(
+                    waitingList
+                )
+            );
+
+
+            document
+                .getElementById(
+                    "waitingForm"
+                )
+                .reset();
+
+
+            displayWaitingList();
+
+
+            showMessage(
+                "Customer Added",
+                `${name} has been added to the waiting list.`,
+                "success"
+            );
+
+        }
+    );
+
+
+
+/* =====================================================
+   ASSIGN ROOM
+   ===================================================== */
+
+function assignRoom(index) {
+
+    const customer =
+        waitingList[index];
+
+
+    if (
+        !customer
+    ) {
+
+        showMessage(
+            "Customer Not Found",
+            "The selected waiting customer could not be found.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const eligibleIndex =
+        getEligibleCustomerIndex();
+
+
+    /*
+     * Only the first eligible customer
+     * can receive an available room.
+     */
+
+    if (
+        index !== eligibleIndex
+    ) {
+
+        showMessage(
+            "Room Not Available",
+            "This customer must wait because no matching room is currently available.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const availableRoom =
+        getAvailableRoomForCustomer(
+            customer
+        );
+
+
+    if (
+        !availableRoom
+    ) {
+
+        showMessage(
+            "Room Not Available",
+            "There is currently no available room matching this customer's requested room type.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    showConfirmation(
+
+        "Assign Room",
+
+        `Room ${availableRoom.number} is available for ${customer.name}. Proceed with room allocation?`,
+
+        function() {
+
+            /*
+             * Clear previous temporary
+             * allocation data.
+             */
+
+            clearWaitingAllocation();
+
+
+            /*
+             * Save waiting customer.
+             */
+
+            localStorage.setItem(
+                "waitingCustomerName",
+                customer.name
+            );
+
+            localStorage.setItem(
+                "waitingCustomerPhone",
+                customer.phone
+            );
+
+            localStorage.setItem(
+                "waitingCustomerRoomType",
+                customer.roomType
+            );
+
+            localStorage.setItem(
+                "waitingCustomerGuests",
+                customer.guests
+            );
+
+
+            /*
+             * IMPORTANT:
+             * Store the customer's current
+             * position in the waiting queue.
+             */
+
+            localStorage.setItem(
+                "waitingCustomerIndex",
+                String(index)
+            );
+
+
+            /*
+             * Store the exact room that should
+             * be allocated.
+             */
+
+            localStorage.setItem(
+                "selectedRoomNumber",
+                String(
+                    availableRoom.number
+                )
+            );
+
+            localStorage.setItem(
+                "selectedRoomType",
+                availableRoom.type
+            );
+
+            localStorage.setItem(
+                "selectedFacility",
+                availableRoom.facility
+            );
+
+
+            /*
+             * Also store one combined object.
+             * This makes the room selection
+             * transfer more reliable.
+             */
+
+            localStorage.setItem(
+                "grandStaySelectedRoom",
+                JSON.stringify({
+
+                    number:
+                        String(
+                            availableRoom.number
+                        ),
+
+                    type:
+                        availableRoom.type,
+
+                    facility:
+                        availableRoom.facility
+
+                })
+            );
+
+
+            /*
+             * Open Rooms page.
+             */
+
+            window.location.href =
+                "room.html";
+
+        }
+
+    );
+
+}
+
+
+
+/* =====================================================
+   REMOVE CUSTOMER
+   ===================================================== */
+
+function removeCustomer(index) {
+
+    const customer =
+        waitingList[index];
+
+
+    if (
+        !customer
+    ) {
+
+        return;
+
+    }
+
+
+    showConfirmation(
+
+        "Remove Customer",
+
+        `Remove ${customer.name} from the waiting list?`,
+
+        function() {
+
+            const activeWaitingIndex =
+                localStorage.getItem(
+                    "waitingCustomerIndex"
+                );
+
+
+            waitingList.splice(
+                index,
+                1
+            );
+
+
+            localStorage.setItem(
+                "grandStayWaitingQueue",
+                JSON.stringify(
+                    waitingList
+                )
+            );
+
+
+            /*
+             * If the removed customer was
+             * currently selected for allocation,
+             * clear temporary allocation data.
+             */
+
+            if (
+                activeWaitingIndex !== null &&
+                parseInt(
+                    activeWaitingIndex
+                ) === index
+            ) {
+
+                clearWaitingAllocation();
+
+            }
+
+
+            if (
+                waitingList.length === 0
+            ) {
+
+                clearWaitingAllocation();
+
+            }
+
+
+            displayWaitingList();
+
+
+            showMessage(
+                "Customer Removed",
+                `${customer.name} has been removed from the waiting list.`,
+                "delete"
+            );
+
+        },
+
+        true
+
+    );
+
+}
+
+
+
+/* =====================================================
+   INITIAL DISPLAY
+   ===================================================== */
+
+displayWaitingList();
+
+
+</script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,1392 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Rooms | GrandStay Hotel</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+    .waiting-customer-banner {
+        background: #ffffff;
+        border: 1px solid #e8dfd3;
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin: 20px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .waiting-label {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        color: #a4865f;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+
+    .waiting-customer-banner h3 {
+        margin: 0 0 6px;
+        font-size: 19px;
+    }
+
+    .waiting-customer-banner p {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .waiting-customer-banner strong {
+        color: #5f5141;
+    }
+
+    .waiting-clear-btn {
+        border: none;
+        padding: 10px 16px;
+        border-radius: 9px;
+        background: #f8e7e5;
+        color: #a64b43;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .waiting-clear-btn:hover {
+        background: #f1d2cf;
+    }
+
+    .room-button.selected {
+        outline: 3px solid #a4865f;
+        outline-offset: 3px;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(164, 134, 95, 0.25);
+    }
+
+    .room-button.selected span,
+    .room-button.selected small {
+        font-weight: 700;
+    }
+
+    @media (max-width: 700px) {
+
+        .waiting-customer-banner {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        🏨 GrandStay
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <a href="index.html">
+            Dashboard
+        </a>
+
+        <a href="room.html" class="active">
+            Rooms
+        </a>
+
+        <a href="reservations.html">
+            Reservations
+        </a>
+
+        <a href="waiting-list.html">
+            Waiting List
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- ================= MAIN CONTENT ================= -->
+
+<main class="main-content">
+
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div>
+
+            <h1>Room Management</h1>
+
+            <p>
+                View and manage hotel room availability
+            </p>
+
+        </div>
+
+        <div class="profile">
+
+            <strong>Admin</strong>
+
+            <span>
+                Hotel Manager
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= WAITING CUSTOMER ================= -->
+
+    <div
+        id="waitingCustomerBanner"
+        class="waiting-customer-banner"
+        style="display: none;"
+    >
+
+        <div>
+
+            <span class="waiting-label">
+                Room Allocation
+            </span>
+
+            <h3 id="waitingCustomerNameDisplay">
+                Customer Name
+            </h3>
+
+            <p>
+
+                Requested Room:
+
+                <strong id="waitingCustomerRoomTypeDisplay">
+                    -
+                </strong>
+
+                &nbsp; | &nbsp;
+
+                Guests:
+
+                <strong id="waitingCustomerGuestsDisplay">
+                    -
+                </strong>
+
+            </p>
+
+        </div>
+
+        <button
+            type="button"
+            onclick="clearWaitingCustomer()"
+            class="waiting-clear-btn"
+        >
+            Cancel Allocation
+        </button>
+
+    </div>
+
+
+    <!-- ================= PAGE HEADING ================= -->
+
+    <section class="room-header">
+
+        <p class="section-label">
+            GRANDSTAY HOTEL
+        </p>
+
+        <h2>
+            Room Layout
+        </h2>
+
+        <p>
+            Select an available room to continue with a reservation.
+        </p>
+
+    </section>
+
+
+    <!-- ================= SUMMARY ================= -->
+
+    <section class="room-summary">
+
+        <div class="summary-box">
+
+            <span>
+                TOTAL ROOMS
+            </span>
+
+            <strong id="totalRooms">
+                80
+            </strong>
+
+        </div>
+
+        <div class="summary-box">
+
+            <span>
+                AVAILABLE
+            </span>
+
+            <strong id="availableRooms">
+                80
+            </strong>
+
+        </div>
+
+        <div class="summary-box">
+
+            <span>
+                OCCUPIED
+            </span>
+
+            <strong id="occupiedRooms">
+                0
+            </strong>
+
+        </div>
+
+        <div class="summary-box">
+
+            <span>
+                AC ROOMS
+            </span>
+
+            <strong>
+                60
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= LEGEND ================= -->
+
+    <section class="room-legend">
+
+        <div>
+            <span class="legend-box available"></span>
+            Available
+        </div>
+
+        <div>
+            <span class="legend-box occupied"></span>
+            Occupied
+        </div>
+
+        <div>
+            <span class="legend-box premium"></span>
+            Premium
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- FLOOR 1 -->
+    <!-- ================================================= -->
+
+    <section class="floor-section">
+
+        <div class="floor-header">
+
+            <div>
+
+                <span class="section-label">
+                    FLOOR 01
+                </span>
+
+                <h3>
+                    Single Rooms
+                </h3>
+
+            </div>
+
+            <div class="floor-price">
+
+                <span class="room-count">
+                    20 Rooms
+                </span>
+
+                <div class="price">
+                    AC ₹1,500/night
+                    <span>|</span>
+                    Non-AC ₹1,200/night
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="room-category">
+
+            <h4>
+                Single AC
+            </h4>
+
+            <div class="room-grid">
+
+                <button type="button" class="room-button available"><span>101</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>102</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>103</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>104</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>105</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>106</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>107</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>108</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>109</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>110</span><small>AC</small></button>
+
+            </div>
+
+        </div>
+
+
+        <div class="room-category">
+
+            <h4>
+                Single Non-AC
+            </h4>
+
+            <div class="room-grid">
+
+                <button type="button" class="room-button available"><span>111</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>112</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>113</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>114</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>115</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>116</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>117</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>118</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>119</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>120</span><small>Non-AC</small></button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- FLOOR 2 -->
+    <!-- ================================================= -->
+
+    <section class="floor-section">
+
+        <div class="floor-header">
+
+            <div>
+
+                <span class="section-label">
+                    FLOOR 02
+                </span>
+
+                <h3>
+                    Double Rooms
+                </h3>
+
+            </div>
+
+            <div class="floor-price">
+
+                <span class="room-count">
+                    20 Rooms
+                </span>
+
+                <div class="price">
+                    AC ₹2,200/night
+                    <span>|</span>
+                    Non-AC ₹1,800/night
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="room-category">
+
+            <h4>
+                Double AC
+            </h4>
+
+            <div class="room-grid">
+
+                <button type="button" class="room-button available"><span>201</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>202</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>203</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>204</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>205</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>206</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>207</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>208</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>209</span><small>AC</small></button>
+                <button type="button" class="room-button available"><span>210</span><small>AC</small></button>
+
+            </div>
+
+        </div>
+
+
+        <div class="room-category">
+
+            <h4>
+                Double Non-AC
+            </h4>
+
+            <div class="room-grid">
+
+                <button type="button" class="room-button available"><span>211</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>212</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>213</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>214</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>215</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>216</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>217</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>218</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>219</span><small>Non-AC</small></button>
+                <button type="button" class="room-button available"><span>220</span><small>Non-AC</small></button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- FLOOR 3 -->
+    <!-- ================================================= -->
+
+    <section class="floor-section premium-floor">
+
+        <div class="floor-header">
+
+            <div>
+
+                <span class="section-label">
+                    FLOOR 03
+                </span>
+
+                <h3>
+                    Deluxe Rooms
+                </h3>
+
+                <p class="premium-description">
+                    Premium high-facility AC rooms
+                </p>
+
+            </div>
+
+            <div class="floor-price">
+
+                <span class="room-count">
+                    20 Rooms
+                </span>
+
+                <div class="price">
+                    ₹3,000/night
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="room-category">
+
+            <h4>
+                Premium Deluxe Rooms — AC
+            </h4>
+
+            <div class="room-grid">
+
+                <button type="button" class="room-button premium available"><span>301</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>302</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>303</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>304</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>305</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>306</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>307</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>308</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>309</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>310</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>311</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>312</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>313</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>314</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>315</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>316</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>317</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>318</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>319</span><small>Deluxe</small></button>
+                <button type="button" class="room-button premium available"><span>320</span><small>Deluxe</small></button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- FLOOR 4 -->
+    <!-- ================================================= -->
+
+    <section class="floor-section premium-floor">
+
+        <div class="floor-header">
+
+            <div>
+
+                <span class="section-label">
+                    FLOOR 04
+                </span>
+
+                <h3>
+                    Suite Rooms
+                </h3>
+
+                <p class="premium-description">
+                    Premium high-facility AC rooms
+                </p>
+
+            </div>
+
+            <div class="floor-price">
+
+                <span class="room-count">
+                    20 Rooms
+                </span>
+
+                <div class="price">
+                    ₹4,500/night
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="room-category">
+
+            <h4>
+                Premium Suite Rooms — AC
+            </h4>
+
+            <div class="room-grid">
+
+                <button type="button" class="room-button premium available"><span>401</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>402</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>403</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>404</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>405</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>406</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>407</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>408</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>409</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>410</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>411</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>412</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>413</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>414</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>415</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>416</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>417</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>418</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>419</span><small>Suite</small></button>
+                <button type="button" class="room-button premium available"><span>420</span><small>Suite</small></button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- SELECTED ROOM -->
+    <!-- ================================================= -->
+
+    <section
+        class="selected-room-panel"
+        id="selectedRoomPanel"
+    >
+
+        <div class="selected-room-info">
+
+            <span class="selected-label">
+                SELECTED ROOM
+            </span>
+
+            <h2 id="selectedRoomNumber">
+                No Room Selected
+            </h2>
+
+            <p id="selectedRoomType">
+                Click an available room to select it.
+            </p>
+
+        </div>
+
+        <div class="selected-room-details">
+
+            <div>
+
+                <span>
+                    Room Type
+                </span>
+
+                <strong id="selectedType">
+                    —
+                </strong>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Facility
+                </span>
+
+                <strong id="selectedFacility">
+                    —
+                </strong>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Status
+                </span>
+
+                <strong id="selectedStatus">
+                    —
+                </strong>
+
+            </div>
+
+            <a
+                href="reservations.html"
+                id="bookRoomButton"
+                class="book-room-btn"
+                aria-disabled="true"
+            >
+                Book Room
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= NOTE ================= -->
+
+    <section class="allocation-note">
+
+        <strong>
+            💡 How Room Selection Works
+        </strong>
+
+        <p>
+            Green rooms are available for booking, while red rooms
+            are currently occupied. Click any green room to select it,
+            then click Book Room to continue with the reservation.
+            Deluxe and Suite rooms are premium high-facility AC rooms.
+        </p>
+
+    </section>
+
+
+</main>
+
+
+<!-- ================================================= -->
+<!-- ROOM PAGE JAVASCRIPT -->
+<!-- ================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const roomButtons =
+        document.querySelectorAll(".room-button");
+
+    const bookRoomButton =
+        document.getElementById("bookRoomButton");
+
+    const selectedRoomNumber =
+        document.getElementById("selectedRoomNumber");
+
+    const selectedRoomType =
+        document.getElementById("selectedRoomType");
+
+    const selectedType =
+        document.getElementById("selectedType");
+
+    const selectedFacility =
+        document.getElementById("selectedFacility");
+
+    const selectedStatus =
+        document.getElementById("selectedStatus");
+
+    const availableRoomsElement =
+        document.getElementById("availableRooms");
+
+    const occupiedRoomsElement =
+        document.getElementById("occupiedRooms");
+
+    const totalRoomsElement =
+        document.getElementById("totalRooms");
+
+
+    /* =========================================
+       ROOM INFORMATION
+       ========================================= */
+
+    function getRoomInformation(roomNumber) {
+
+        const number = Number(roomNumber);
+
+        if (number >= 101 && number <= 110) {
+            return {
+                type: "Single",
+                facility: "AC"
+            };
+        }
+
+        if (number >= 111 && number <= 120) {
+            return {
+                type: "Single",
+                facility: "Non-AC"
+            };
+        }
+
+        if (number >= 201 && number <= 210) {
+            return {
+                type: "Double",
+                facility: "AC"
+            };
+        }
+
+        if (number >= 211 && number <= 220) {
+            return {
+                type: "Double",
+                facility: "Non-AC"
+            };
+        }
+
+        if (number >= 301 && number <= 320) {
+            return {
+                type: "Deluxe",
+                facility: "Premium AC"
+            };
+        }
+
+        if (number >= 401 && number <= 420) {
+            return {
+                type: "Suite",
+                facility: "Premium AC"
+            };
+        }
+
+        return {
+            type: "",
+            facility: ""
+        };
+    }
+
+
+    /* =========================================
+       GET CONFIRMED RESERVATIONS
+       ========================================= */
+
+    function getReservations() {
+
+        return JSON.parse(
+            localStorage.getItem(
+                "grandStayReservations"
+            )
+        ) || [];
+    }
+
+
+    /* =========================================
+       GET OCCUPIED ROOMS
+       ========================================= */
+
+        /* =========================================
+       GET OCCUPIED ROOMS
+       (C backend + saved reservations)
+       ========================================= */
+
+    let backendOccupiedRooms = [];
+
+    function getOccupiedRooms() {
+
+        const localOccupied =
+            getReservations()
+                .filter(function (reservation) {
+
+                    return reservation.status === "Confirmed";
+
+                })
+                .map(function (reservation) {
+
+                    return String(reservation.room);
+
+                });
+
+        return Array.from(
+            new Set(
+                backendOccupiedRooms.concat(localOccupied)
+            )
+        );
+
+    }
+
+
+    /* =========================================
+       LOAD ROOM AVAILABILITY FROM C BACKEND
+       ========================================= */
+
+    function loadBackendRooms() {
+
+        fetch("http://localhost:8080/rooms")
+
+            .then(function (response) {
+
+                return response.json();
+
+            })
+
+            .then(function (data) {
+
+                backendOccupiedRooms =
+                    data.rooms
+                        .filter(function (room) {
+
+                            return !room.available;
+
+                        })
+                        .map(function (room) {
+
+                            return String(room.roomNumber);
+
+                        });
+
+                updateRoomStatus();
+
+            })
+
+            .catch(function (error) {
+
+                console.warn(
+                    "Backend not reachable, using saved reservations only.",
+                    error
+                );
+
+            });
+
+    }
+
+    /* =========================================
+       UPDATE ROOM STATUS
+       ========================================= */
+
+    function updateRoomStatus() {
+
+        const occupiedRooms =
+            getOccupiedRooms();
+
+        roomButtons.forEach(function (button) {
+
+            const numberElement =
+                button.querySelector("span");
+
+            if (!numberElement) {
+                return;
+            }
+
+            const roomNumber =
+                numberElement.textContent.trim();
+
+            if (
+                occupiedRooms.includes(roomNumber)
+            ) {
+
+                button.disabled = true;
+
+                button.classList.remove(
+                    "available"
+                );
+
+                button.classList.remove(
+                    "selected"
+                );
+
+                button.classList.add(
+                    "occupied"
+                );
+
+            } else {
+
+                button.disabled = false;
+
+                button.classList.remove(
+                    "occupied"
+                );
+
+                button.classList.add(
+                    "available"
+                );
+
+            }
+
+        });
+
+
+        if (totalRoomsElement) {
+            totalRoomsElement.textContent = "80";
+        }
+
+        if (occupiedRoomsElement) {
+            occupiedRoomsElement.textContent =
+                occupiedRooms.length;
+        }
+
+        if (availableRoomsElement) {
+            availableRoomsElement.textContent =
+                80 - occupiedRooms.length;
+        }
+
+    }
+
+
+    /* =========================================
+       WAITING CUSTOMER
+       ========================================= */
+
+    function getWaitingCustomer() {
+
+        const index =
+            localStorage.getItem(
+                "waitingCustomerIndex"
+            );
+
+        const queue =
+            JSON.parse(
+                localStorage.getItem(
+                    "grandStayWaitingQueue"
+                )
+            ) || [];
+
+        if (
+            index === null ||
+            !queue[index]
+        ) {
+            return null;
+        }
+
+        const customer = queue[index];
+
+        const savedName =
+            localStorage.getItem(
+                "waitingCustomerName"
+            );
+
+        if (
+            !savedName ||
+            customer.name !== savedName
+        ) {
+            return null;
+        }
+
+        return customer;
+    }
+
+
+    /* =========================================
+       SHOW WAITING CUSTOMER
+       ========================================= */
+
+    function displayWaitingCustomer() {
+
+        const customer =
+            getWaitingCustomer();
+
+        const banner =
+            document.getElementById(
+                "waitingCustomerBanner"
+            );
+
+        if (!banner) {
+            return;
+        }
+
+        if (!customer) {
+
+            banner.style.display =
+                "none";
+
+            return;
+        }
+
+        document.getElementById(
+            "waitingCustomerNameDisplay"
+        ).textContent =
+            customer.name || "Customer";
+
+        document.getElementById(
+            "waitingCustomerRoomTypeDisplay"
+        ).textContent =
+            customer.roomType || "-";
+
+        document.getElementById(
+            "waitingCustomerGuestsDisplay"
+        ).textContent =
+            customer.guests || "-";
+
+        banner.style.display =
+            "flex";
+    }
+
+
+    /* =========================================
+       ROOM BUTTON CLICK
+       ========================================= */
+
+    roomButtons.forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                if (button.disabled) {
+                    return;
+                }
+
+                const numberElement =
+                    button.querySelector("span");
+
+                if (!numberElement) {
+                    return;
+                }
+
+                const roomNumber =
+                    numberElement.textContent.trim();
+
+                const roomInfo =
+                    getRoomInformation(roomNumber);
+
+
+                /* ---------------------------------
+                   WAITING CUSTOMER VALIDATION
+                   --------------------------------- */
+
+                const waitingCustomer =
+                    getWaitingCustomer();
+
+                if (
+                    waitingCustomer &&
+                    waitingCustomer.roomType !==
+                    roomInfo.type
+                ) {
+
+                    alert(
+                        "This room does not match the waiting customer's required room type."
+                    );
+
+                    return;
+                }
+
+
+                /* ---------------------------------
+                   REMOVE OLD SELECTION
+                   --------------------------------- */
+
+                roomButtons.forEach(
+                    function (otherButton) {
+
+                        otherButton.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
+
+
+                /* ---------------------------------
+                   SELECT THIS ROOM
+                   --------------------------------- */
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                /* ---------------------------------
+                   SAVE ROOM
+                   --------------------------------- */
+
+                localStorage.setItem(
+                    "selectedRoomNumber",
+                    roomNumber
+                );
+
+                localStorage.setItem(
+                    "selectedRoomType",
+                    roomInfo.type
+                );
+
+                localStorage.setItem(
+                    "selectedFacility",
+                    roomInfo.facility
+                );
+
+
+                /* ---------------------------------
+                   DISPLAY ROOM
+                   --------------------------------- */
+
+                selectedRoomNumber.textContent =
+                    "Room " + roomNumber;
+
+                selectedRoomType.textContent =
+                    roomInfo.type;
+
+                selectedType.textContent =
+                    roomInfo.type;
+
+                selectedFacility.textContent =
+                    roomInfo.facility;
+
+                selectedStatus.textContent =
+                    "Available";
+
+
+                /* ---------------------------------
+                   ENABLE BOOK BUTTON
+                   --------------------------------- */
+
+                bookRoomButton.setAttribute(
+                    "aria-disabled",
+                    "false"
+                );
+
+                bookRoomButton.style.pointerEvents =
+                    "auto";
+
+                bookRoomButton.style.opacity =
+                    "1";
+
+            }
+        );
+
+    });
+
+
+    /* =========================================
+       BOOK ROOM
+       ========================================= */
+
+    bookRoomButton.addEventListener(
+        "click",
+        function (event) {
+
+            const room =
+                localStorage.getItem(
+                    "selectedRoomNumber"
+                );
+
+            if (!room) {
+
+                event.preventDefault();
+
+                alert(
+                    "Please select an available room first."
+                );
+
+                return;
+            }
+
+            const occupiedRooms =
+                getOccupiedRooms();
+
+            if (
+                occupiedRooms.includes(
+                    String(room)
+                )
+            ) {
+
+                event.preventDefault();
+
+                alert(
+                    "This room is already occupied. Please select another room."
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =========================================
+       RESTORE PREVIOUS SELECTION
+       ========================================= */
+
+    const savedRoom =
+        localStorage.getItem(
+            "selectedRoomNumber"
+        );
+
+    if (savedRoom) {
+
+        const roomButton =
+            Array.from(roomButtons).find(
+                function (button) {
+
+                    const span =
+                        button.querySelector("span");
+
+                    return (
+                        span &&
+                        span.textContent.trim() ===
+                        String(savedRoom)
+                    );
+
+                }
+            );
+
+        const occupiedRooms =
+            getOccupiedRooms();
+
+        if (
+            roomButton &&
+            !occupiedRooms.includes(
+                String(savedRoom)
+            )
+        ) {
+
+            roomButton.classList.add(
+                "selected"
+            );
+
+            const roomInfo =
+                getRoomInformation(savedRoom);
+
+            selectedRoomNumber.textContent =
+                "Room " + savedRoom;
+
+            selectedRoomType.textContent =
+                roomInfo.type;
+
+            selectedType.textContent =
+                roomInfo.type;
+
+            selectedFacility.textContent =
+                roomInfo.facility;
+
+            selectedStatus.textContent =
+                "Available";
+
+            bookRoomButton.setAttribute(
+                "aria-disabled",
+                "false"
+            );
+
+            bookRoomButton.style.pointerEvents =
+                "auto";
+
+            bookRoomButton.style.opacity =
+                "1";
+
+        }
+
+    }
+
+
+        updateRoomStatus();
+
+    displayWaitingCustomer();
+
+    loadBackendRooms();
+
+});
+
+/* =========================================
+   CANCEL WAITING CUSTOMER
+   ========================================= */
+
+function clearWaitingCustomer() {
+
+    localStorage.removeItem(
+        "waitingCustomerName"
+    );
+
+    localStorage.removeItem(
+        "waitingCustomerPhone"
+    );
+
+    localStorage.removeItem(
+        "waitingCustomerRoomType"
+    );
+
+    localStorage.removeItem(
+        "waitingCustomerGuests"
+    );
+
+    localStorage.removeItem(
+        "waitingCustomerIndex"
+    );
+
+    localStorage.removeItem(
+        "grandStayAllocationNotice"
+    );
+
+    localStorage.removeItem(
+        "selectedRoomNumber"
+    );
+
+    localStorage.removeItem(
+        "selectedRoomType"
+    );
+
+    localStorage.removeItem(
+        "selectedFacility"
+    );
+
+    window.location.reload();
+
+}
+
+</script>
+
+</body>
+</html>
+```
